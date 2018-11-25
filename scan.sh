@@ -6,6 +6,12 @@
 # rootPath=$(cd ../..; pwd)
 # echo $rootPath
 # source getVideoLength
+
+realPath=$(dirname $0)
+cd ./${realPath}  # 当前位置跳到脚本位置
+realPath=$(pwd)   # 取到脚本目录
+echo $realPath
+
 mp4Dir=$1
 
 mp4File=$(cd $mp4Dir; ls | grep .mp4)

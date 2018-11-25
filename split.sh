@@ -1,5 +1,11 @@
 #!/bin/bash
+realPath=$(dirname $0)
+cd ./${realPath}  # 当前位置跳到脚本位置
+realPath=$(pwd)   # 取到脚本目录
+echo $realPath
+
 spiltRoot="split"
+rm -rf $realPath/$spiltRoot
 mkdir $spiltRoot
 
 mp4Dir=$1
@@ -9,28 +15,25 @@ mp4File=$(cd $mp4Dir; ls | grep .mp4)
 mp4=(${mp4File// / })
 # echo ${mp4[0]}
 for (( i = 0; i < ${#mp4[@]}; i++ )); do
-  i=0
   fileName=${mp4[i]}
   dirName="$spiltRoot/${fileName%%.*}/"
-  echo $dirName
+  echo "dirName->$dirName"
   mkdir $dirName
-  echo $fileName
+  echo "fileName->$fileName"
   source getVideoLength.sh
   # getVideoLength
   startTime=0
   endTime=0
   divider=300
-
-  printf "%d %s %c\n" $startTime "abc" "def"
-  printf "%d %d\n" $endTime $length
+  index=0
 
   while(($startTime < $durationSecond))
   do
-    i=$[$i+1]
+    index=$[$index+1]
     endTime=$[$startTime+$divider]
-  printf "i->%d startTime->%d" $i $startTime
+  printf "index->%d startTime->%d endTime->%d durationSecond->%d \n" $index $startTime $endTime $durationSecond
 
-  ffmpeg -ss $startTime -to $endTime -accurate_seek -i $fileName -codec copy $dirName$i.mp4
+  ffmpeg -ss $startTime -to $endTime -accurate_seek -i $realPath/$mp4Dir/$fileName -codec copy $dirName$index.mp4
 
     startTime=$[endTime]
   echo " endTime-${endTime}"
